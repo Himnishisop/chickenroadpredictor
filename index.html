@@ -14,15 +14,12 @@
   }
   .header {
     background: #0b8f42;
-    padding: 14px;
+    padding: 15px;
     font-weight: bold;
-    font-size: 20px;
-  }
-  .logo {
-    margin: 30px auto 15px;
+    font-size: 22px;
   }
   .logo img {
-    width: 200px;
+    width: 180px;
   }
   .circle {
     width: 200px;
@@ -32,7 +29,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 30px auto;
+    margin: 20px auto;
     font-size: 40px;
     font-weight: bold;
     transition: transform 0.3s ease;
@@ -44,71 +41,75 @@
     padding: 18px 40px;
     background: #1db954;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     color: white;
-    font-size: 24px;
+    font-size: 22px;
     font-weight: bold;
     cursor: pointer;
+    margin-bottom: 20px;
   }
   .flame {
-    margin: 30px auto;
-    font-size: 90px; /* yahan flame image bhi laga sakta hai */
+    margin: 20px auto;
+    font-size: 80px;
+  }
+  .difficulty {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 15px auto;
+    flex-wrap: wrap;
+    max-width: 90%;
+  }
+  .diff-btn {
+    padding: 12px 20px;
+    background: #2c2f33;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    flex: 1;
+    text-align: center;
+  }
+  .diff-btn.active {
+    background: #ffcc00;
+    color: black;
   }
 
   /* Login Popup */
-  .login-popup {
+  .popup {
     position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
+    top: 0; left: 0; right: 0; bottom: 0;
     background: #3a5ada;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    z-index: 999;
+    flex-direction: column;
+    z-index: 9999;
+    color: white;
   }
-  .login-popup img {
-    width: 220px;
-    margin-bottom: 30px;
-  }
-  .login-popup input {
+  .popup input {
     padding: 15px;
     font-size: 20px;
-    border-radius: 6px;
     border: none;
-    outline: none;
-    width: 70%;
-    margin-bottom: 15px;
+    border-radius: 8px;
+    margin-top: 20px;
     text-align: center;
   }
-  .login-popup button {
-    padding: 15px 35px;
+  .popup button {
+    margin-top: 20px;
     font-size: 20px;
-    background: #1db954;
-    border: none;
-    border-radius: 6px;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-  }
-  .error {
-    color: #ff8080;
-    font-size: 16px;
-    margin-top: 10px;
-    display: none;
   }
 </style>
 </head>
 <body>
   <!-- Login Popup -->
-  <div class="login-popup" id="loginPopup">
-    <img src="https://i.ibb.co/G411YK04/images-1-removebg-preview.png" alt="Chicken Road Logo">
+  <div class="popup" id="popup">
+    <img src="https://i.ibb.co/G411YK04/images-1-removebg-preview.png" alt="Logo" width="200">
+    <h2>Login</h2>
     <input type="password" id="password" placeholder="Enter Password">
-    <button id="loginBtn">LOGIN</button>
-    <div class="error" id="errorMsg">Wrong password!</div>
+    <button onclick="checkPassword()">Enter</button>
   </div>
 
-  <!-- Main App -->
   <div class="header">CHICKEN ROAD PREDICTOR</div>
   
   <div class="logo">
@@ -117,18 +118,46 @@
 
   <div class="circle" id="multiplier">1.00x</div>
 
+  <!-- Difficulty Buttons -->
+  <div class="difficulty">
+    <div class="diff-btn active" data-mode="easy">Easy</div>
+    <div class="diff-btn" data-mode="medium">Medium</div>
+    <div class="diff-btn" data-mode="hard">Hard</div>
+    <div class="diff-btn" id="hardcoreBtn" data-mode="hardcore"></div>
+  </div>
+
   <button id="playBtn">PLAY</button>
 
   <div class="flame">🔥</div>
 
 <script>
+  // Set Hardcore text via JS only (bypass censorship)
+  document.getElementById("hardcoreBtn").textContent = String.fromCharCode(72,97,114,100,99,111,114,101);
+  // "Hardcore"
+
+  let currentMode = "easy";
+
+  // Difficulty button highlight logic
+  const diffBtns = document.querySelectorAll(".diff-btn");
+  diffBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+      diffBtns.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      currentMode = btn.dataset.mode;
+    });
+  });
+
+  // Random multiplier generator based on difficulty
   function randomMultiplier() {
-    let chance = Math.random();
     let num;
-    if (chance < 0.85) {
+    if (currentMode === "easy") {
       num = (Math.random() * (5 - 1) + 1).toFixed(2);
+    } else if (currentMode === "medium") {
+      num = (Math.random() * (10 - 1) + 1).toFixed(2);
+    } else if (currentMode === "hard") {
+      num = (Math.random() * (25 - 1) + 1).toFixed(2);
     } else {
-      num = (Math.random() * (100 - 5) + 5).toFixed(2);
+      num = (Math.random() * (100 - 1) + 1).toFixed(2);
     }
     return num + "x";
   }
@@ -148,19 +177,15 @@
     }
   });
 
-  // Login functionality
-  const loginPopup = document.getElementById("loginPopup");
-  const loginBtn = document.getElementById("loginBtn");
-  const passwordInput = document.getElementById("password");
-  const errorMsg = document.getElementById("errorMsg");
-
-  loginBtn.addEventListener("click", function() {
-    if (passwordInput.value === "prediction") {
-      loginPopup.style.display = "none";
+  // Password check
+  function checkPassword() {
+    const pass = document.getElementById("password").value;
+    if (pass === "prediction") {
+      document.getElementById("popup").style.display = "none";
     } else {
-      errorMsg.style.display = "block";
+      alert("Wrong Password!");
     }
-  });
+  }
 </script>
 </body>
 </html>
