@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Chicken Road Predictor</title>
+<style>
+  body {
+    margin: 0;
+    background: #3a5ada;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    color: white;
+  }
+  .header {
+    background: #0b8f42;
+    padding: 16px;
+    font-weight: bold;
+    font-size: 22px;
+  }
+  .logo {
+    margin: 30px auto 15px;
+  }
+  .logo img {
+    width: 200px;
+  }
+  .circle {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: #1ed760;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 30px auto;
+    font-size: 40px;
+    font-weight: bold;
+    transition: transform 0.3s ease;
+  }
+  .circle.animate {
+    transform: scale(1.2);
+  }
+  button {
+    padding: 18px 40px;
+    background: #1db954;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  .flame {
+    margin: 30px auto;
+    font-size: 90px; /* Agar flame image chahiye to yahan <img> laga lena */
+  }
+
+  /* Popup login */
+  .popup {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+  }
+  .popup-box {
+    background: white;
+    color: black;
+    padding: 30px 20px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 350px;
+    text-align: center;
+  }
+  .popup-box h2 {
+    margin-bottom: 20px;
+  }
+  .popup-box input {
+    padding: 14px;
+    font-size: 18px;
+    width: 90%;
+    margin-bottom: 20px;
+  }
+  .popup-box button {
+    padding: 14px 30px;
+    font-size: 18px;
+    background: #1db954;
+    border: none;
+    color: white;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  .error {
+    color: red;
+    font-size: 14px;
+    margin-top: -10px;
+    margin-bottom: 15px;
+    display: none;
+  }
+</style>
+</head>
+<body>
+  <div class="header">CHICKEN ROAD PREDICTOR</div>
+  
+  <div class="logo">
+    <img src="https://i.ibb.co/G411YK04/images-1-removebg-preview.png" alt="Chicken Logo">
+  </div>
+
+  <div class="circle" id="multiplier">1.00x</div>
+
+  <button id="playBtn">PLAY</button>
+
+  <div class="flame">🔥</div>
+
+  <!-- Login Popup -->
+  <div class="popup" id="loginPopup">
+    <div class="popup-box">
+      <h2>Login</h2>
+      <input type="password" id="passwordInput" placeholder="Enter password">
+      <div class="error" id="errorMsg">Wrong password!</div>
+      <button id="loginBtn">Submit</button>
+    </div>
+  </div>
+
+<script>
+  function randomMultiplier() {
+    // mostly 1 - 5x, with rare chance of bigger
+    let chance = Math.random();
+    let num;
+    if (chance < 0.85) {
+      num = (Math.random() * (5 - 1) + 1).toFixed(2);
+    } else {
+      num = (Math.random() * (100 - 5) + 5).toFixed(2);
+    }
+    return num + "x";
+  }
+
+  const playBtn = document.getElementById("playBtn");
+  const multiplier = document.getElementById("multiplier");
+
+  playBtn.addEventListener("click", function() {
+    let val = randomMultiplier();
+    multiplier.classList.add("animate");
+    multiplier.innerText = val;
+    setTimeout(() => multiplier.classList.remove("animate"), 300);
+
+    if (playBtn.innerText === "PLAY") {
+      playBtn.innerText = "NEXT";
+    }
+  });
+
+  // Login popup logic
+  const loginPopup = document.getElementById("loginPopup");
+  const loginBtn = document.getElementById("loginBtn");
+  const passwordInput = document.getElementById("passwordInput");
+  const errorMsg = document.getElementById("errorMsg");
+
+  loginBtn.addEventListener("click", function() {
+    if (passwordInput.value === "prediction") {
+      loginPopup.style.display = "none";
+    } else {
+      errorMsg.style.display = "block";
+    }
+  });
+
+  // Enter key support
+  passwordInput.addEventListener("keydown", function(e){
+    if(e.key === "Enter"){
+      loginBtn.click();
+    }
+  });
+</script>
+</body>
+</html>
