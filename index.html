@@ -14,9 +14,9 @@
   }
   .header {
     background: #0b8f42;
-    padding: 16px;
+    padding: 14px;
     font-weight: bold;
-    font-size: 22px;
+    font-size: 20px;
   }
   .logo {
     margin: 30px auto 15px;
@@ -52,57 +52,63 @@
   }
   .flame {
     margin: 30px auto;
-    font-size: 90px; /* Agar flame image chahiye to yahan <img> laga lena */
+    font-size: 90px; /* yahan flame image bhi laga sakta hai */
   }
 
-  /* Popup login */
-  .popup {
+  /* Login Popup */
+  .login-popup {
     position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.8);
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: #3a5ada;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     z-index: 999;
   }
-  .popup-box {
-    background: white;
-    color: black;
-    padding: 30px 20px;
-    border-radius: 12px;
-    width: 90%;
-    max-width: 350px;
+  .login-popup img {
+    width: 220px;
+    margin-bottom: 30px;
+  }
+  .login-popup input {
+    padding: 15px;
+    font-size: 20px;
+    border-radius: 6px;
+    border: none;
+    outline: none;
+    width: 70%;
+    margin-bottom: 15px;
     text-align: center;
   }
-  .popup-box h2 {
-    margin-bottom: 20px;
-  }
-  .popup-box input {
-    padding: 14px;
-    font-size: 18px;
-    width: 90%;
-    margin-bottom: 20px;
-  }
-  .popup-box button {
-    padding: 14px 30px;
-    font-size: 18px;
+  .login-popup button {
+    padding: 15px 35px;
+    font-size: 20px;
     background: #1db954;
     border: none;
-    color: white;
     border-radius: 6px;
+    color: white;
     font-weight: bold;
     cursor: pointer;
   }
   .error {
-    color: red;
-    font-size: 14px;
-    margin-top: -10px;
-    margin-bottom: 15px;
+    color: #ff8080;
+    font-size: 16px;
+    margin-top: 10px;
     display: none;
   }
 </style>
 </head>
 <body>
+  <!-- Login Popup -->
+  <div class="login-popup" id="loginPopup">
+    <img src="https://i.ibb.co/G411YK04/images-1-removebg-preview.png" alt="Chicken Road Logo">
+    <input type="password" id="password" placeholder="Enter Password">
+    <button id="loginBtn">LOGIN</button>
+    <div class="error" id="errorMsg">Wrong password!</div>
+  </div>
+
+  <!-- Main App -->
   <div class="header">CHICKEN ROAD PREDICTOR</div>
   
   <div class="logo">
@@ -115,19 +121,8 @@
 
   <div class="flame">🔥</div>
 
-  <!-- Login Popup -->
-  <div class="popup" id="loginPopup">
-    <div class="popup-box">
-      <h2>Login</h2>
-      <input type="password" id="passwordInput" placeholder="Enter password">
-      <div class="error" id="errorMsg">Wrong password!</div>
-      <button id="loginBtn">Submit</button>
-    </div>
-  </div>
-
 <script>
   function randomMultiplier() {
-    // mostly 1 - 5x, with rare chance of bigger
     let chance = Math.random();
     let num;
     if (chance < 0.85) {
@@ -143,6 +138,7 @@
 
   playBtn.addEventListener("click", function() {
     let val = randomMultiplier();
+
     multiplier.classList.add("animate");
     multiplier.innerText = val;
     setTimeout(() => multiplier.classList.remove("animate"), 300);
@@ -152,10 +148,10 @@
     }
   });
 
-  // Login popup logic
+  // Login functionality
   const loginPopup = document.getElementById("loginPopup");
   const loginBtn = document.getElementById("loginBtn");
-  const passwordInput = document.getElementById("passwordInput");
+  const passwordInput = document.getElementById("password");
   const errorMsg = document.getElementById("errorMsg");
 
   loginBtn.addEventListener("click", function() {
@@ -163,13 +159,6 @@
       loginPopup.style.display = "none";
     } else {
       errorMsg.style.display = "block";
-    }
-  });
-
-  // Enter key support
-  passwordInput.addEventListener("keydown", function(e){
-    if(e.key === "Enter"){
-      loginBtn.click();
     }
   });
 </script>
